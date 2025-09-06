@@ -1,0 +1,126 @@
+
+{% extends "../../layouts/LayoutAdmin.html" %}
+{% comment %} {% load static %} {% endcomment %}
+{% block title %}Listar Productos de Ropa{% endblock %}
+{% block content %}
+{% load static %}
+<div class="p-5 rounded-xl shadow-2xl border border-gray-300 h-[98%] flex flex-col">
+
+    <div class='flex justify-between items-center mb-5'>
+
+        <h1 class='text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-600 font-bold'> Catálogo de Ropa</h1>
+    
+        <input 
+            type="text"
+            id="filtroNombre"
+            placeholder='Nombre'
+            class='p-2 bg-gray-300 outline-none rounded-lg w-[15%]'
+            oninput="filtrarProductos()"
+        />
+
+        <input
+            type="text"
+            id="input-codigo"
+            placeholder='Codigo'
+            value=""
+            class='p-2 bg-gray-300 outline-none rounded-lg w-[15%]'
+        />
+
+        <select id="filtroCategoria" class="p-2 bg-gray-300 outline-none rounded-lg w-[15%] text-gray-700" onchange="filtrarProductos()">
+            <option value="">Filtrar por categoría</option>
+            {% for categoria in categorias %}
+            <option value="{{ categoria.categoriaropaid }}">{{ categoria.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="talla" class="p-2 bg-gray-300 outline-none rounded-lg w-[15%] text-gray-700" onchange="filtrarProductos()">
+            <option value="">Filtrar por talla</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            <option value="XXXL">XXXL</option>
+            <option value="Otro">Otro</option>
+        </select>
+
+        <a href="{% url 'agregar_producto_ropa' %}" class='text-ellipsis bg-orange-500 rounded-lg w-[10%] h-10 p-2 text-gray-100 font-semibold flex items-center justify-around hover:bg-orange-500/80 transition-colors cursor-pointer'>
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-ellipsis overflow-hidden whitespace-nowrap">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /> 
+            </svg>
+            Agregar
+        </a>
+      </div>
+
+      <hr class=' border-gray-500/30' />
+
+      <div class="rounded-tr-lg rounded-tl-lg overflow-y-auto flex-1 min-h-0">
+        <table id="datos" class="w-full table-fixed border-collapse mb-5 rounded-lg">
+            <thead class="sticky top-0 bg-gray-100 z-10 p-3 border border-t-0 border-l-0 border-r-0 border-b-gray-200">
+                <tr class="">
+                    <th class="p-2 text-2xl">#</th>
+                    <th class="p-2 text-2xl">Producto</th>
+                    <th class="p-2 text-2xl">Imagen</th>
+                    <th class="p-2 text-2xl">Categoria</th>
+                    <th class="p-2 text-2xl">Talla</th>
+                    <th class="p-2 text-2xl">Precio</th>
+                    <th class="p-2 text-2xl">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="p-2 rounded-lg w-full">
+                {% for productoRopa in productosRopa %}
+                <tr class="hover:bg-gray-200 rounded-lg transition-colors">
+                    <td class="p-3 text-xl text-center">{{ productoRopa.cont }}</td>
+                    <td class="p-3 text-xl text-center">{{ productoRopa.nombre }}</td>
+                    <td class="text-center"><img src="{% static 'productos/' %}{{ productoRopa.rutafoto }}?v={{ productoRopa.updated_at.timestamp }}" class="mx-auto block w-16 h-16"></td>
+                    <td class="p-3 text-xl text-center">{{ productoRopa.categoriaropaid.nombre }}</td>
+                    <td class="p-3 text-xl text-center">{{ productoRopa.talla }}</td>
+                    <td class="p-3 text-xl text-center">{{ productoRopa.precio }}</td>
+                    <td class="p-3 text-xl text-center">
+                        <div class="grid grid-cols-2 gap-2 w-full">
+                            <!-- tus botones aquí -->
+                            <a href="#" onclick="window.location.href='actualizarProductoRopa/{{ productoRopa.productoropaid}}'" class="btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-11 rounded-lg text-amber-300 hover:bg-gray-300 p-2  w-full">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                            </a>   
+                            
+                            <a href="#" onclick="eliminarProductoRopa({{productoRopa.productoropaid}})" class="btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-11 rounded-lg text-red-500 hover:bg-gray-300 p-2 w-full">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg> 
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}           
+            </tbody>
+        </table>
+      </div>
+
+      <hr class=' border-gray-500/30'/>
+
+      <div class="flex justify-center items-center mt-5">
+        {% if productosRopa.has_previous %}
+            <a href="?page=1" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">&laquo; Primero</a>
+            <a href="?page={{ productosRopa.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Anterior</a>
+        {% endif %}
+
+        <span class="px-3 py-1 bg-gray-100 rounded text-gray-700">Página {{ productosRopa.number }} de {{ productosRopa.paginator.num_pages }}</span>
+
+        {% if productosRopa.has_next %}
+            <a href="?page={{ productosRopa.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Siguiente</a>
+            <a href="?page={{ productosRopa.paginator.num_pages }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Último &raquo;</a>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static "js/eliminar.js" %}"></script>
+<script src="{% static "js/listarProductosRopa.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "../layouts/LayoutAdmin.html" %}
+{% load static %}
+{% block content %}
+<div>
+    {% comment %} <div class="flex items-center justify-between mb-10">
+        <h1 class='text-4xl text-gray-700'>What's up gays? Good evening!</h1>
+    </div> {% endcomment %}
+
+    {% if rolid == 1 %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2 mb-4">
+        {% include "../components/cardTicket_A_Caja.html" %}
+        {% include "../components/cardTicket_C_Caja.html" %}
+        {% include "../components/cardTicket_Efectivo_Caja.html" %}
+        {% include "../components/cardTicket_Product.html" %}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2 mb-4">
+
+        <div class="containLineChart bg-white shadow-2xl p-8 rounded-xl border  border-gray-300">
+
+            <div class="headerLineChart mb-5">
+                <h1 class="text-2xl font-bold mb-1 text-gray-800 font-sans">Ventas Mensuales</h1>
+                <h4>Tendencias de ventas durante el último año</h4>
+            </div>
+
+            <div class="lineChart">
+                <canvas id="lineChart" class=""></canvas>
+            </div>
+
+        </div>
+
+        <div class="containLineChart bg-white shadow-2xl p-8 rounded-xl border border-gray-300">
+
+            <div class="headerLineChart mb-5">
+                <h1 class="text-2xl font-bold mb-1 text-gray-800 font-sans">Ingresos Mensuales</h1>
+                <h4>Tendencias de ingresos durante el último año</h4>
+            </div>
+
+            <div class="lineChartIngresos">
+                <canvas id="lineChartIngresos" class=""></canvas>
+            </div>
+
+        </div>
+    
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-7 lg-grid-cols-7 xl:grid-cols-7 gap-2 mb-4">
+
+         <div class="containerBarChart bg-white shadow-2xl p-8 rounded-xl border col-span-4 border-gray-300">
+            
+            <div class="headerBarChart mb-5">
+                <h1 class="text-2xl font-bold mb-1 text-gray-800 font-sans">Ventas por Empleado</h1>
+                <h4>Distribución de ventas por empleado</h4>
+            </div>
+
+            <div class="barChart">
+                <canvas id="barChart" class=""></canvas>
+            </div>
+        </div>
+
+        <div class="containerPieChart bg-white shadow-2xl p-8 rounded-xl border col-span-3 border-gray-300">
+            
+            <div class="headerPieChart mb-5">
+                <h1 class="text-2xl font-bold mb-1 text-gray-800 font-sans">Estado del Inventario</h1>
+                <h4>Distribución por estado de stock</h4>
+            </div>
+
+            <div class="pieChart">
+                <canvas id="pieChart" class=""></canvas>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2 mb-4 bg-green-600">
+        {% include "../components/cardTicket_A_Caja.html" %}
+        {% include "../components/cardTicket_C_Caja.html" %}
+        {% include "../components/cardTicket_Efectivo_Caja.html" %}
+        {% include "../components/cardTicket_Product.html" %}
+    </div>
+    {% endif %}
+
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/caja.js' %}"></script>
+<script src="{% static 'js/charts/ventas_por_empleado.js' %}"></script>
+<script src="{% static 'js/charts/estado_inventario.js' %}"></script>
+<script src="{% static 'js/charts/ventas_mensuales.js' %}"></script>
+<script src="{% static 'js/charts/ingresos_mensuales.js' %}"></script>
+{% endblock %}

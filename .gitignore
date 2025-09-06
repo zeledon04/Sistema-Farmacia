@@ -1,0 +1,9 @@
+venv/
+*.pyc
+__pycache__/
+
+node_modules/
+
+farmacia.db
+
+farmacia/static/dist/style.css

@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Farmacia{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+  <link rel="icon" href="{% static '/img/logo.ico' %}" type="image/x-icon" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="{% static "sweetalert/sweetalert2.all.js" %}"></script>
+  <script src="{% static "sweetalert/sweetalert2.all.min.js" %}"></script>
+  <script src="{% static "sweetalert/sweetalert2.js" %}"></script>
+  <script src="{% static "sweetalert/sweetalert2.min.js" %}"></script>
+  <link rel="stylesheet" href="{% static 'sweetalert/sweetalert2.min.css' %}">
+  <link rel="stylesheet" href="{% static "sweetalert/sweetalert2.css" %}">
+
+
+</head>
+
+<body class="text-gray-300">
+    <div class="bg-gray-900 dark:bg-gray-500">
+        <div class="min-h-screen grid grid-cols-1 xl:grid-cols-6">
+            {% include "../components/sidebar.html" %}
+            
+            <div class="xl:col-span-5 bg-gray-100">
+              {% include "../components/header.html" %}
+              
+              <div class="xl:h-[90vh] overflow-y-auto pt-4 pb-2 px-4 text-gray-700">
+                {% block content %}
+                {% endblock content %}
+              </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'js/sidebar.js' %}" ></script>
+    <script src="{% static 'js/showNotifications.js' %}"></script>
+    <script src="{% static 'js/chart.umd.js' %}"></script>
+
+  {% block scripts %}
+  {% endblock %}
+
+  {% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                title: "{{ message }}",
+                icon: "{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}error{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}warning{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}info{% else %}question{% endif %}",
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+</body>
+
+<style>
+    .rotate {
+      transform: rotate(90deg);
+    }
+  </style>
+
+</html>
+
